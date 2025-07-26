@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Daily Summary – John Adams</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg-color: #0e0e0e;
+      --text-color: #f1f1f1;
+      --card-bg: #1a1a1a;
+      --highlight: #00ffff;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    header {
+      background: linear-gradient(90deg, #1e1e1e, #111);
+      padding: 20px;
+      text-align: center;
+      color: var(--highlight);
+      font-size: 2em;
+      box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .entry {
+      background: var(--card-bg);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--highlight);
+      border-radius: 5px;
+      box-shadow: 0 0 10px #00ffff33;
+    }
+
+    .entry h2 {
+      margin-top: 0;
+      font-size: 1.3em;
+      color: var(--highlight);
+    }
+
+    .entry p {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .signature {
+      text-align: right;
+      margin-top: 10px;
+      font-style: italic;
+      color: #888;
+    }
+
+    .input-area {
+      margin-bottom: 30px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: none;
+      resize: vertical;
+      background-color: #1c1c1c;
+      color: #fff;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background-color: var(--highlight);
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00ffff;
+      margin-right: 10px;
+    }
+
+    button:hover {
+      background-color: #00dddd;
+    }
+
+    .toggle-theme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+    }
+
+    .donation {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .donation img {
+      max-width: 250px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .donation p {
+      font-size: 1em;
+      color: var(--text-color);
+    }
+
+    .light-mode {
+      --bg-color: #ffffff;
+      --text-color: #111111;
+      --card-bg: #f5f5f5;
+      --highlight: #007acc;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="toggle-theme" onclick="toggleTheme()">Toggle Light</button>
+
+  <header>
+    My Daily Summary – John Adams
+  </header>
+
+  <div class="container">
+
+    <div class="input-area">
+      <textarea id="dailyText" rows="5" placeholder="Write your daily summary here..."></textarea><br>
+      <button onclick="saveEntry()">Save Summary</button>
+      <button onclick="clearEntries()">Clear All</button>
+    </div>
+
+    <div id="entries"></div>
+
+    <div class="donation">
+      <img src="bitcoin_qr.jpeg" alt="Bitcoin QR Code">
+      <p><strong>Bitcoin:</strong> bc1q6h6v066hzlxe5gyepzzpmx2xd06zvn9q497y5c</p>
+      <p><strong>PayPal:</strong> canaldedesenhosa@gmail.com</p>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle("light-mode");
+    }
+
+    function saveEntry() {
+      const text = document.getElementById("dailyText").value.trim();
+      if (text === "") return;
+
+      const today = new Date().toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      const entry = {
+        date: today,
+        content: text
+      };
+
+      const entries = JSON.parse(localStorage.getItem("summaries") || "[]");
+      entries.unshift(entry); // add on top
+      localStorage.setItem("summaries", JSON.stringify(entries));
+      document.getElementById("dailyText").value = "";
+      displayEntries();
+    }
+
+    function clearEntries() {
+      if (confirm("Are you sure you want to clear all entries?")) {
+        localStorage.removeItem("summaries");
+        displayEntries();
+      }
+    }
+
+    function displayEntries() {
+      const entries = JSON.parse(localStorage.getItem("summaries") || "[]");
+      const container = document.getElementById("entries");
+      container.innerHTML = "";
+
+      entries.forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "entry";
+        div.innerHTML = `
+          <h2>${entry.date}</h2>
+          <p>${entry.content}</p>
+          <div class="signature">– John Adams</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    displayEntries();
+  </script>
+
+</body>
+</html>
