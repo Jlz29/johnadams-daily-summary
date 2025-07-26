@@ -27,7 +27,6 @@
       text-align: center;
       color: var(--highlight);
       font-size: 2em;
-      position: relative;
       box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
     }
 
@@ -64,18 +63,58 @@
       color: #888;
     }
 
-    button.toggle-theme {
-      position: fixed;
-      top: 20px;
-      right: 20px;
+    .input-area {
+      margin-bottom: 30px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: none;
+      resize: vertical;
+      background-color: #1c1c1c;
+      color: #fff;
+    }
+
+    button {
+      margin-top: 10px;
       padding: 10px 20px;
       border: none;
-      background-color: #00ffff;
+      border-radius: 20px;
+      background-color: var(--highlight);
       color: black;
       font-weight: bold;
       cursor: pointer;
-      border-radius: 20px;
-      box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+      margin-right: 10px;
+    }
+
+    button:hover {
+      background-color: #00dddd;
+    }
+
+    .toggle-theme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+    }
+
+    .donation {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .donation img {
+      max-width: 250px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .donation p {
+      font-size: 1em;
+      color: var(--text-color);
     }
 
     .light-mode {
@@ -95,23 +134,73 @@
   </header>
 
   <div class="container">
-    <div class="entry">
-      <h2>July 26, 2025</h2>
-      <p>Today I worked on improving my coding skills and learned how to edit my own website. It was fun and productive!</p>
-      <div class="signature">– John Adams</div>
+
+    <div class="input-area">
+      <textarea id="dailyText" rows="5" placeholder="Write your daily summary here..."></textarea><br>
+      <button onclick="saveEntry()">Save Summary</button>
+      <button onclick="clearEntries()">Clear All</button>
     </div>
 
-    <div class="entry">
-      <h2>July 25, 2025</h2>
-      <p>I spent time writing on Publish0x, helping people understand blockchain tools. I also made progress on a few job applications.</p>
-      <div class="signature">– John Adams</div>
+    <div id="entries"></div>
+
+    <div class="donation">
+      <img src="bitcoin_qr.jpeg" alt="Bitcoin QR Code">
+      <p><strong>Bitcoin:</strong> (insira seu endereço ou mantenha oculto)</p>
+      <p><strong>PayPal:</strong> canaldedesenhosa@gmail.com</p>
     </div>
+
   </div>
 
   <script>
     function toggleTheme() {
       document.body.classList.toggle("light-mode");
     }
+
+    function saveEntry() {
+      const text = document.getElementById("dailyText").value.trim();
+      if (text === "") return;
+
+      const today = new Date().toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+
+      const entry = {
+        date: today,
+        content: text
+      };
+
+      const entries = JSON.parse(localStorage.getItem("summaries") || "[]");
+      entries.unshift(entry); // add on top
+      localStorage.setItem("summaries", JSON.stringify(entries));
+      document.getElementById("dailyText").value = "";
+      displayEntries();
+    }
+
+    function clearEntries() {
+      if (confirm("Are you sure you want to clear all entries?")) {
+        localStorage.removeItem("summaries");
+        displayEntries();
+      }
+    }
+
+    function displayEntries() {
+      const entries = JSON.parse(localStorage.getItem("summaries") || "[]");
+      const container = document.getElementById("entries");
+      container.innerHTML = "";
+
+      entries.forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "entry";
+        div.innerHTML = `
+          <h2>${entry.date}</h2>
+          <p>${entry.content}</p>
+          <div class="signature">– John Adams</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    displayEntries();
   </script>
 
 </body>
