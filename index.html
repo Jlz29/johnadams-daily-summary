@@ -2,120 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Daily Summary – John Adams</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --background: #121212;
-      --text: #ffffff;
-      --highlight: #00ffff;
-    }
-
     body {
-      background-color: var(--background);
-      color: var(--text);
+      background-color: #121212;
+      color: #fff;
       font-family: Arial, sans-serif;
-      margin: 0;
       padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
+      margin: 0;
     }
 
     h1 {
       text-align: center;
-      color: var(--highlight);
-      text-shadow: 0 0 10px var(--highlight);
+      color: #00ffff;
     }
 
     textarea {
       width: 100%;
+      height: 100px;
       padding: 10px;
-      font-size: 1em;
-      border-radius: 6px;
+      border-radius: 5px;
       border: none;
-      resize: vertical;
-      background-color: #1c1c1c;
-      color: #fff;
+      background: #1e1e1e;
+      color: white;
+      font-size: 1em;
     }
 
     button {
       margin-top: 10px;
       padding: 10px 20px;
+      background-color: #00ffff;
+      color: black;
       border: none;
       border-radius: 20px;
-      background-color: var(--highlight);
-      color: black;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 10px #00ffff;
-      margin-right: 10px;
     }
 
-    button:hover {
-      opacity: 0.8;
-    }
-
-    .footer {
-      margin-top: 50px;
-      text-align: center;
-    }
-
-    .qr-code {
+    .entry {
+      background: #1e1e1e;
       margin-top: 20px;
+      padding: 15px;
+      border-left: 4px solid #00ffff;
+      border-radius: 5px;
     }
 
-    .toggle-mode {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    .entry h2 {
+      margin: 0 0 10px;
+      color: #00ffff;
     }
 
-    .light-mode {
-      --background: #ffffff;
-      --text: #000000;
+    .signature {
+      text-align: right;
+      color: #888;
+      font-style: italic;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="toggle-mode">
-    <button onclick="toggleMode()">Toggle Light</button>
-  </div>
 
   <h1>My Daily Summary – John Adams</h1>
 
-  <textarea id="summary" rows="10" placeholder="Write your daily summary here..."></textarea>
+  <textarea id="dailyText" placeholder="Write your daily summary here..."></textarea>
   <br />
-  <button onclick="saveSummary()">Save Summary</button>
-  <button onclick="clearSummary()">Clear All</button>
+  <button onclick="saveEntry()">Save Summary</button>
 
-  <div class="footer">
-    <h2>Bitcoin QR Code</h2>
-    <p><strong>Bitcoin:</strong> bc1q6h6v066hzlxe5gyepzzpmx2xd06zvn9q497y5c</p>
-    <p><strong>PayPal:</strong> canaldedesenhosa@gmail.com</p>
-  </div>
-
-  <script>
-    function saveSummary() {
-      const text = document.getElementById('summary').value;
-      localStorage.setItem('dailySummary', text);
-      alert('Summary saved!');
-    }
-
-    function clearSummary() {
-      document.getElementById('summary').value = '';
-      localStorage.removeItem('dailySummary');
-    }
-
-    function toggleMode() {
-      document.body.classList.toggle('light-mode');
-    }
-
-    // Load saved summary
-    window.onload = () => {
-      const saved = localStorage.getItem('dailySummary');
-      if (saved) {
-        document.getElementById('summary').value = saved;
-      }
-    }
-  </script>
-</body>
-</html>
+  <div
