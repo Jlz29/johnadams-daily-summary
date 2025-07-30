@@ -189,24 +189,30 @@
         return;
       }
       const files = await res.json();
-      const list = await Promise.all(files.reverse().map(async file => {
-        const contentRes = await fetch(file.download_url);
-        const raw = await contentRes.text();
-        const html = marked.parse(raw);
-        return `
-          <div class="entry">
-            <h3>${file.name.replace(/\.md$/, "")}</h3>
-            ${html}
-            <div class="comment-box">
-              <textarea placeholder="Leave a comment..."></textarea>
-              <button onclick="alert('Feature under development')">Submit Comment</button>
-              <div class="comments-section">
-                <p class="comment">(Comments will appear here)</p>
+      const list = [];
+      for (const file of files.reverse()) {
+        try {
+          const contentRes = await fetch(file.download_url);
+          const raw = await contentRes.text();
+          const html = marked.parse(raw);
+          list.push(`
+            <div class="entry">
+              <h3>${file.name.replace(/\.md$/, "")}</h3>
+              ${html}
+              <div class="comment-box">
+                <textarea placeholder="Leave a comment..."></textarea>
+                <button onclick="alert('Feature under development')">Submit Comment</button>
+                <div class="comments-section">
+                  <p class="comment">(Comments will appear here)</p>
+                </div>
               </div>
             </div>
-          </div>
-        `;
-      }));
+          `);
+          await new Promise(r => setTimeout(r, 700)); // delay 700ms between requests
+        } catch (err) {
+          list.push(`<div class="entry"><p>Error loading post: ${file.name}</p></div>`);
+        }
+      }
       document.getElementById("summaryList").innerHTML = list.join("");
     }
 
